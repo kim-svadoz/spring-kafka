@@ -7,7 +7,7 @@ import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
 import org.springframework.kafka.requestreply.ReplyingKafkaTemplate;
 
-@Configuration
+//@Configuration
 /**
  * 키 밸류는 물론 응답하는 타입도 정해줘야 한다.
  */
