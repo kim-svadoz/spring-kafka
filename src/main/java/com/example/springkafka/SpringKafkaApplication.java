@@ -1,5 +1,6 @@
 package com.example.springkafka;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Map;
 
@@ -11,6 +12,9 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.kafka.core.KafkaTemplate;
+
+import com.example.springkafka.producer.KafkaProducer;
 
 @SpringBootApplication
 public class SpringKafkaApplication {
@@ -19,26 +23,13 @@ public class SpringKafkaApplication {
     }
 
     @Bean
-    public ApplicationRunner runner(AdminClient adminClient) {
+    public ApplicationRunner runner(KafkaProducer kafkaProducer) {
         return args -> {
-            Map<String, TopicListing> topics = adminClient.listTopics().namesToListings().get();
-            for (String topicName : topics.keySet()) {
-                // 토픽의 이름을 가져온다
-                TopicListing topicListing = topics.get(topicName);
-                System.out.println(topicListing);
-
-                // 토픽의 이름뿐만 아니라 모든 정보를 가져온다
-                Map<String, TopicDescription> description = adminClient.describeTopics(Collections.singleton(topicName))
-                                                                                     .all()
-                                                                                     .get();
-                System.out.println(description);
-
-                // 토픽의 삭제
-                // consumer.offset은 오프셋을 관리하는 중요한 토픽이기 때문에 해당 조건을 추가해 인터널이 아닐 경우만 삭제하도록 설정하는 것이 좋다.
-                if (!topicListing.isInternal()) {
-                    adminClient.deleteTopics(Collections.singleton(topicName));
-                }
-            }
+            kafkaProducer.aysnc("clip3", "Hello, Clip3-async");
+            kafkaProducer.sync("clip3", "Hello, CLip3-sync");
+            kafkaProducer.routingSend("clip3", "Hello, Clip3-routing");
+            kafkaProducer.routingSendBytes("clip3-bytes", "Hello, Clip3-bytes".getBytes(StandardCharsets.UTF_8));
+            kafkaProducer.replyingSend("clip3-request", "Ping Clip3 !!");
         };
     }
 }

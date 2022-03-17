@@ -12,24 +12,13 @@ import org.springframework.kafka.core.KafkaAdmin;
 public class KafkaTopicConfiguration {
 
     @Bean
-    public AdminClient adminClient(KafkaAdmin kafkaAdmin) {
-        return AdminClient.create(kafkaAdmin.getConfigurationProperties());
-    }
-
-    @Bean
-    public NewTopic clip2() {
-        return TopicBuilder.name("clip2").build();
-    }
-
-    @Bean
-    public KafkaAdmin.NewTopics clip2s() {
+    public KafkaAdmin.NewTopics clip3s() {
         return new KafkaAdmin.NewTopics(
-            TopicBuilder.name("clip2-part1").build(),
-            TopicBuilder.name("clip2-part2")
-                .partitions(3)
-                .replicas(1)
-                .config(TopicConfig.RETENTION_MS_CONFIG, String.valueOf(1000 * 60 * 60))
-                .build()
+            TopicBuilder.name("clip3").build(),
+            TopicBuilder.name("clip3-bytes").build(),
+            TopicBuilder.name("clip3-request").build(),
+            TopicBuilder.name("clip3-reply").build()
+
         );
     }
 }
